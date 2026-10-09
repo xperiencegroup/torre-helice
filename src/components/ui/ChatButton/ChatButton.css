@@ -1,0 +1,61 @@
+/* Siempre por encima de todo, excepto RotateNotice / app-frame (9999) */
+.chat-button {
+  position: fixed;
+  right: 1.75rem;
+  bottom: 1.75rem;
+  z-index: 9000;
+
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--color-amarillo);
+  color: var(--color-negro);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.375rem;
+  box-shadow: 0 4px 24px rgba(251, 203, 34, 0.4);
+  transition: transform 0.15s;
+}
+
+.chat-button:hover {
+  transform: scale(1.07);
+}
+
+/* Scrollbar con la identidad: fino, riel oscuro, pulgar amarillo */
+.chat-panel__body {
+  scrollbar-width: thin;                                   /* Firefox */
+  scrollbar-color: var(--color-amarillo) rgba(255, 255, 255, 0.06);
+}
+
+.chat-panel__body::-webkit-scrollbar {                     /* Chrome, Safari, Edge */
+  width: 6px;
+}
+
+.chat-panel__body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.chat-panel__body::-webkit-scrollbar-thumb {
+  background: var(--color-amarillo);
+}
+
+.chat-panel__body::-webkit-scrollbar-thumb:hover {
+  background: #ffd84d;
+}
+
+@media (orientation: landscape) and (max-width: 957px) {
+  .chat-button {
+    right: 1rem;
+    bottom: 1rem;
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+  }
+}

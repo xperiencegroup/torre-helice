@@ -1,0 +1,33 @@
+.foto-renders-carousel {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--color-negro);
+  display: flex;
+  flex-direction: column;
+}
+
+.foto-renders-carousel__viewport {
+  overflow: hidden;
+  width: 100%;
+  height: 100dvh;
+}
+
+.foto-renders-carousel__container {
+  display: flex;
+  height: 100%;
+}
+
+.foto-renders-carousel__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foto-renders-carousel__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

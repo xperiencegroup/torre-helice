@@ -1,0 +1,230 @@
+.compartir-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  background: rgba(0, 0, 0, 0.72);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.compartir-modal__layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100dvh;
+}
+
+.compartir-modal__form,
+.compartir-modal__envio {
+  padding: 5.5rem 4rem 3.75rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-amarillo) rgba(255, 255, 255, 0.06);
+}
+
+.compartir-modal__form {
+  border-right: 1px solid var(--color-borde);
+}
+
+.compartir-modal__envio {
+  display: flex;
+  flex-direction: column;
+}
+
+.compartir-modal__eyebrow {
+  margin: 0 0 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-amarillo);
+}
+
+.compartir-modal__titulo {
+  margin: 0 0 0.625rem;
+  max-width: 27.5rem;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 2.6vw, 2.125rem);
+  line-height: 1.12;
+  color: var(--color-blanco);
+}
+
+.compartir-modal__sub {
+  margin: 0 0 2rem;
+  max-width: 26rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #c9c9c9;
+}
+
+.compartir-modal__preg {
+  margin-bottom: 1.5rem;
+}
+
+.compartir-modal__label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-amarillo);
+}
+
+.compartir-modal__input {
+  width: 100%;
+  max-width: 27.5rem;
+  padding: 0.8rem 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-borde);
+  outline: none;
+  color: var(--color-blanco);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+}
+
+.compartir-modal__input:focus {
+  border-color: var(--color-amarillo);
+}
+
+.compartir-modal__textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Tarjeta "vas a enviar" */
+.compartir-modal__thumb {
+  max-width: 420px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 3px solid var(--color-amarillo);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+}
+
+.compartir-modal__img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+}
+
+.compartir-modal__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.1rem 1.25rem;
+}
+
+.compartir-modal__marca {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--color-amarillo);
+}
+
+.compartir-modal__nombre {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--color-blanco);
+}
+
+.compartir-modal__tipo {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: #9a9a9a;
+}
+
+.compartir-modal__enviar {
+  align-self: flex-start;
+  margin-top: 2.125rem;
+  padding: 1rem 1.875rem;
+  background: var(--color-amarillo);
+  border: none;
+  color: var(--color-negro);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 1rem;
+  transition: transform 0.15s;
+}
+
+.compartir-modal__enviar:hover {
+  transform: translateY(-1px);
+}
+
+.compartir-modal__ok {
+  margin: 2.125rem 0 0;
+  max-width: 22rem;
+  padding: 1rem 1.125rem;
+  border-left: 3px solid var(--color-amarillo);
+  background: rgba(251, 203, 34, 0.08);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-blanco);
+}
+
+/* Mobile landscape */
+@media (orientation: landscape) and (max-width: 957px) {
+  .compartir-modal__form,
+  .compartir-modal__envio {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .compartir-modal__envio {
+    padding-right: 4rem; /* libre para el CloseButton */
+  }
+
+  .compartir-modal__eyebrow {
+    margin-bottom: 0.5rem;
+    font-size: 0.6rem;
+  }
+
+  .compartir-modal__titulo {
+    font-size: 1.15rem;
+  }
+
+  .compartir-modal__sub {
+    margin-bottom: 1rem;
+    font-size: 0.7rem;
+  }
+
+  .compartir-modal__preg {
+    margin-bottom: 0.75rem;
+  }
+
+  .compartir-modal__label {
+    margin-bottom: 0.4rem;
+    font-size: 0.6rem;
+  }
+
+  .compartir-modal__input {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.7rem;
+  }
+
+  .compartir-modal__textarea {
+    min-height: 60px;
+  }
+
+  .compartir-modal__thumb {
+    max-width: 260px;
+    border-width: 2px;
+  }
+
+  .compartir-modal__info {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .compartir-modal__nombre {
+    font-size: 0.9rem;
+  }
+
+  .compartir-modal__enviar {
+    margin-top: 1rem;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.8rem;
+  }
+
+  .compartir-modal__ok {
+    margin-top: 1rem;
+    font-size: 0.7rem;
+  }
+}

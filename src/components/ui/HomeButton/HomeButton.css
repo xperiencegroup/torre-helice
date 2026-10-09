@@ -1,0 +1,29 @@
+.home-button {
+  position:       fixed;
+  top:            1.5rem;
+  left: 1.5rem;
+  z-index:        30;
+  width:          clamp(2.5rem, 4vw, 3.25rem);
+  height:         clamp(2.5rem, 4vw, 3.25rem);
+  border-radius:  50%;
+  background:     var(--color-cream-alpha);
+  border:         none;
+  display:        flex;
+  align-items:    center;
+  justify-content: center;
+  cursor:         pointer;
+}
+
+.home-button__icon {
+  width:  55%;
+  height: 55%;
+  object-fit: contain;
+}
+
+/* Mobile landscape */
+@media (orientation: landscape) and (max-height: 500px) {
+  .home-button {
+    top:   0.75rem;
+    right: 0.75rem;
+  }
+}

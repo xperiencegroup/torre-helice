@@ -1,0 +1,113 @@
+.menu-lateral {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  min-width: clamp(9rem, 14vw, 13rem);
+
+  background: var(--color-panel);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-borde);
+  border-left: 3px solid var(--color-amarillo);
+}
+
+.menu-lateral--left {
+  align-items: stretch;
+}
+
+.menu-lateral__item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: clamp(0.75rem, 1vw, 0.95rem) 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(0.8rem, 1.3vw, 0.95rem);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-blanco);
+
+  transition: background 0.15s, color 0.15s;
+}
+
+.menu-lateral__item + .menu-lateral__item {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.menu-lateral__item:hover:not(.menu-lateral__item--active) {
+  background: rgba(251, 203, 34, 0.12);
+  color: var(--color-amarillo);
+}
+
+.menu-lateral__item--active {
+  background: var(--color-amarillo);
+  color: var(--color-negro);
+}
+
+.menu-lateral__icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.menu-lateral__icon img,
+.menu-lateral__icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.menu-lateral__label {
+  line-height: 1;
+}
+
+.menu-lateral.is-collapsed {
+  min-width: unset;
+  border-left-width: 1px;
+}
+
+.menu-lateral__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.35rem 0.9rem;
+  background: var(--color-amarillo);
+  border: none;
+  cursor: pointer;
+
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1;
+  color: var(--color-negro);
+}
+
+.menu-lateral.is-collapsed .menu-lateral__arrow {
+  justify-content: center;
+  width: clamp(2.25rem, 3vw, 2.75rem);
+  height: clamp(2.25rem, 3vw, 2.75rem);
+  padding: 0;
+}
+
+.menu-lateral__list {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (orientation: landscape) and (max-width: 957px) {
+  .menu-lateral {
+    min-width: unset;
+  }
+
+  .menu-lateral__item {
+    padding: 0.45rem clamp(0.75rem, 1.5vw, 1rem);
+    font-size: clamp(0.6rem, 1vw, 0.8rem);
+  }
+}

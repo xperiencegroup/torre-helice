@@ -1,0 +1,36 @@
+.close-button {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.75rem;
+  z-index: 110;
+
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--color-borde);
+  color: var(--color-blanco);
+  cursor: pointer;
+
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.close-button:hover {
+  border-color: var(--color-amarillo);
+  color: var(--color-amarillo);
+}
+
+@media (orientation: landscape) and (max-width: 957px) {
+  .close-button {
+    top: 0.75rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+}

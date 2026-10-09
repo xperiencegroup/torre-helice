@@ -1,0 +1,6 @@
+.viewer-360-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--color-negro);
+}

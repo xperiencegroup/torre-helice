@@ -1,0 +1,41 @@
+.ubicacion {
+  position: fixed;
+  inset: 0;
+  z-index: 5;   /* sobre el video; debajo de topbar/menús (20) */
+  background: var(--color-negro);
+}
+
+.ubicacion__map {
+  position: absolute;
+  inset: 0;
+}
+
+.ubicacion__map-3d {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ubicacion__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #8a8a8a;
+}
+
+.ubicacion__menu {
+  position: absolute;
+  top: 50%;
+  right: 1.75rem;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+@media (orientation: landscape) and (max-width: 957px) {
+  .ubicacion__menu {
+    right: 1rem;
+  }
+}

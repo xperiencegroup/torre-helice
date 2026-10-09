@@ -1,0 +1,66 @@
+:root {
+  /* Paleta */
+  --color-negro: #000;
+  --color-blanco: #fff;
+  --color-amarillo: #FBCB22;
+  --color-panel: rgba(0, 0, 0, .82);
+  --color-borde: rgba(255, 255, 255, .14);
+
+  /* Tipografía */
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  /* LEGACY — eliminar al terminar la migración */
+  --color-cream: var(--color-blanco);
+  --color-cream-alpha: rgba(255, 255, 255, .8);
+  --color-sand: var(--color-panel);
+  --color-sand-alpha: var(--color-panel);
+  --color-dark: var(--color-negro);
+  --color-dark-alpha: rgba(0, 0, 0, .8);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-negro);
+  color: var(--color-blanco);
+}
+
+#root {
+  width: 100%;
+  height: 100dvh;
+}
+
+input,
+textarea,
+select {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.app-frame {
+  position: fixed;
+  inset: 0;
+  outline: solid 6px var(--color-amarillo);
+  outline-offset: -6px;
+  pointer-events: none;
+  z-index: 9999;
+}

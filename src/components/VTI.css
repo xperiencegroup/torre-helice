@@ -1,0 +1,28 @@
+.vti {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+}
+
+.vti__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  object-fit: cover;
+}
+
+.vti__menu {
+  position: absolute;
+  top: 50%;
+  right: 1.75rem;
+  transform: translateY(-50%);
+  z-index: 60;
+  pointer-events: all;
+}
+
+@media (orientation: landscape) and (max-width: 957px) {
+  .vti__menu {
+    right: 1rem;
+  }
+}

@@ -1,0 +1,50 @@
+.back-button {
+  position: fixed;
+  left: 1.75rem;
+  bottom: 1.75rem;
+  z-index: 51;
+
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem clamp(1rem, 2.5vw, 1.5rem);
+
+  background: var(--color-panel);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-borde);
+  cursor: pointer;
+
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(0.75rem, 1.2vw, 0.875rem);
+  letter-spacing: 0.14em;
+  color: var(--color-blanco);
+
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.back-button:hover {
+  border-color: var(--color-amarillo);
+  color: var(--color-amarillo);
+}
+
+.back-button__icon {
+  flex-shrink: 0;
+  width: clamp(0.6rem, 1.2vw, 1.4rem);
+  height: clamp(0.6rem, 1.2vw, 1.4rem);
+}
+
+.back-button__label {
+  line-height: 1;
+}
+
+/* Mobile landscape */
+@media (orientation: landscape) and (max-width: 957px) {
+  .back-button {
+    font-size: clamp(0.4rem, 1vw, 0.9rem);
+    left: 1rem;
+    bottom: 0.75rem;
+    padding: 0.55rem clamp(0.6rem, 1.5vw, 1rem);
+  }
+}

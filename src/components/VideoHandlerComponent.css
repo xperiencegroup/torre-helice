@@ -1,0 +1,18 @@
+/* ── VideoHandlerComponent ──────────────────── */
+
+.vhc {
+  position: fixed;
+  inset:    0;
+  z-index:  var(--z-base);
+  overflow: hidden;
+  height: 100dvh;
+}
+
+.vhc__video {
+  position:   absolute;
+  inset:      0;
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+  height: 100dvh;
+}
