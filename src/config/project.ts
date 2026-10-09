@@ -1,8 +1,8 @@
 export const PROJECT = {
   marca: 'XPERIENCE PROPERTIES',
-  nombre: 'SANTA MARÍA TORRE 6',
+  nombre: 'TORRE HÉLICE',
   tipo: 'OFICINAS · SAN PEDRO GARZA GARCÍA',
   desarrollador: 'XPERIENCE',
-  dominio: 'xproperties-t6.xperience.realestate',
-  qr: '/qr/qr__xpropt6stamaria.png',
+  dominio: 'torre-helice.xperience.properties',
+  qr: '/qr/qr__xpropthelice.png',
 } as const

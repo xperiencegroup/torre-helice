@@ -4,7 +4,7 @@ export const DASHBOARD = {
   login: {
     marca: 'XPERIENCE PROPERTIES',
     titulo: 'Panel del administrador',
-    proyecto: { label: 'PROYECTO', value: 't6' },
+    proyecto: { label: 'PROYECTO', value: 'torre_helice' },
     password: { label: 'CONTRASEÑA', value: '......' },
     entrar: 'Entrar al dashboard →',
   },
