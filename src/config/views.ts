@@ -39,4 +39,4 @@ export const VIEW_PATHS: Record<ViewId, string> = {
   [VIEWS.CONTACTO]:       '/contacto',
 }
 
-export const ADMIN_PATH = '/t6-panel'
+export const ADMIN_PATH = '/th-panel'

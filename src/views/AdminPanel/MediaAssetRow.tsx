@@ -44,7 +44,7 @@ export default function MediaAssetRow({
 
       const oldPath = asset.storage_path
       const { error: dbErr } = await supabase
-        .from('t6_sta_maria_media_assets')
+        .from('torre_helice_media_assets')
         .update({
           storage_path: newPath,
           content_type: file.type,

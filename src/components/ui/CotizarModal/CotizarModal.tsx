@@ -42,7 +42,7 @@ export const CotizarModal: React.FC<Props> = ({ paquete, onClose }) => {
     setStatus('sending')
     track(TRACK.cotizar.submit, { paquete })
 
-    const { error } = await supabase.from('t6_sta_maria_cotizaciones').insert({
+    const { error } = await supabase.from('torre_helice_cotizaciones').insert({
       rol,
       m2: m2.trim() || null,
       busca,

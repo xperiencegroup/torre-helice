@@ -1,6 +1,6 @@
 import './AdminAccessButton.css'
 
-const ADMIN_PATH = '/t6-panel'
+const ADMIN_PATH = '/th-panel'
 
 export const AdminAccessButton: React.FC = () => {
   const handleClick = () => {

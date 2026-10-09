@@ -52,7 +52,7 @@ export default function MediaGroupItemRow({
       }
 
       const { error: dbErr } = await supabase
-        .from('t6_sta_maria_media_groups')
+        .from('torre_helice_media_groups')
         .update({
           storage_path,
           content_type,

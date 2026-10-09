@@ -3,7 +3,7 @@ import { useAuthStore } from '../../../store/useAuthStore'
 import { TRACK, track } from '../../../config/trackIds'
 import './LoginForm.css'
 
-const EMAIL_DOMAIN = '@example.local'
+const EMAIL_DOMAIN = '@xperience.group'
 
 export const LoginForm: React.FC = () => {
   const [username, setUsername] = useState('')

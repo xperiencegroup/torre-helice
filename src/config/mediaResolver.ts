@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabaseClient'
 
-const BUCKET_DEFAULT = 't6_media'
+const BUCKET_DEFAULT = 'torre_helice_media'
 
 export interface MediaGroupItem {
   url:   string
@@ -41,7 +41,7 @@ const buildPublicUrl = (
 
 export const fetchMediaAssets = async (): Promise<AssetsMap> => {
   const { data, error } = await supabase
-    .from('t6_sta_maria_media_assets')
+    .from('torre_helice_media_assets')
     .select('key, storage_path, bucket, updated_at')
 
   if (error) {
@@ -58,7 +58,7 @@ export const fetchMediaAssets = async (): Promise<AssetsMap> => {
 
 export const fetchMediaGroups = async (): Promise<GroupsMap> => {
   const { data, error } = await supabase
-    .from('t6_sta_maria_media_groups')
+    .from('torre_helice_media_groups')
     .select('group_key, sort_order, storage_path, label, bucket, updated_at')
     .order('sort_order', { ascending: true })
 

@@ -19,9 +19,9 @@ export default function AdminPanel() {
   async function loadAll() {
     setLoading(true)
     const [{ data: a }, { data: g }] = await Promise.all([
-      supabase.from('t6_sta_maria_media_assets').select('*').order('key'),
+      supabase.from('torre_helice_media_assets').select('*').order('key'),
       supabase
-        .from('t6_sta_maria_media_groups')
+        .from('torre_helice_media_groups')
         .select('*')
         .order('group_key')
         .order('sort_order'),

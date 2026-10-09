@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   // No aplicar fullscreen-on-click dentro del panel admin.
-  if (window.location.pathname.startsWith("/t6-panel")) return;
+  if (window.location.pathname.startsWith("/th-panel")) return;
 
   document.addEventListener("click", function () {
     const elem = document.documentElement;
