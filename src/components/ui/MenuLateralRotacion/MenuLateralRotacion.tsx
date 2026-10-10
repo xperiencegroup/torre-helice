@@ -10,7 +10,7 @@ import { Viewer360Panel } from '../Viewer360Panel/Viewer360Panel'
 
 const CENITAL_MENU_ITEMS: MenuInferiorItem[] = [
   /* { id: 'informacion',    label: 'Información',    icon: '/icons/icon_info.svg' }, */
-  { id: 'foto-renders',   label: 'Foto Renders',   icon: '/icons/icon_foto.svg' },
+  { id: 'foto-renders',   label: 'Fotogalería',   icon: '/icons/icon_foto.svg' },
   { id: 'video-tour',     label: 'Video Tour',     icon: '/icons/icon_video tour.svg' },
   { id: 'recorrido-360',  label: 'Recorrido 360',  icon: '/icons/icon_360.svg' },
 ]
