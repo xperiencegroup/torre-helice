@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // No aplicar fullscreen-on-click dentro del panel admin.
+document.addEventListener("DOMContentLoaded", function () {  
 
   document.addEventListener("click", function () {
     const elem = document.documentElement;

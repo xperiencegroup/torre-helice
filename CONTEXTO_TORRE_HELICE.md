@@ -1,4 +1,4 @@
-# Contexto del proyecto — Xperience Properties (Santa María)
+# Contexto del proyecto — Xperience Properties (Torre Hélice)
 
 ## Stack
 - React 19 + TypeScript + Vite (rolldown/vite 8)
@@ -7,7 +7,18 @@
 - Supabase (auth + Postgres + Storage)
 - CSS plano (NO Tailwind, NO CSS Modules) — cada componente/vista tiene su propio archivo `.css` dedicado, importado directamente en el `.tsx` correspondiente: `import './NombreComponente.css'`
 - Gestor de paquetes: pnpm
-- Deploy: Vercel (app SPA, sin rewrites externos de media — ver sección Media)
+- Deploy: Vercel, proyecto propio de Torre Hélice (app SPA, sin rewrites externos de media — ver sección Media)
+- Repo: `github.com/xperiencegroup/torre-helice`
+- **Origen**: clon de Santa María Torre 6 (`xp-prop`) con historial limpio (commit inicial "base desde xp-prop"). Mismo código y arquitectura; cambian identidad, tablas, bucket y dominio.
+
+## Dominios
+- **Principal**: `https://torre-helice.xperience.properties/` (DNS en el proveedor externo de `xperience.properties`, CNAME hacia Vercel).
+- `PROJECT.dominio` (`config/project.ts`) y `og:url` (`index.html`) ya usan este dominio. QR: `public/qr/qr__xpropthelice.png` apunta a él.
+- Google Maps API key (compartida con Santa María): restricción por HTTP referrer con `https://*.xperience.properties/*`, `https://xperience.properties/*`, el dominio `.realestate` de Santa María y `http://localhost:5173/*`.
+
+## Proyectos relacionados (misma instancia Supabase)
+- **Santa María Torre 6** (`xp-prop`, `sta-maria-t6.xperience.properties`): proyecto origen, tablas `t6_sta_maria_*` y bucket `t6_media`. Nada de Torre Hélice lee ni escribe en ellos.
+- **Dashboard central de medios** (`xp-props-admin`, `admin.xperience.properties`): único lugar desde donde se reemplazan videos/fotos de todos los proyectos. Ver sección Administración de medios.
 
 ## Convenciones de estilos
 - **Un CSS dedicado por componente/vista**, junto al `.tsx`, mismo nombre exacto (case-sensitive — Vercel/Linux distingue mayúsculas/minúsculas aunque Windows no).
@@ -37,12 +48,13 @@
 - `verbatimModuleSyntax` está activo en `tsconfig` — todo tipo importado desde otro archivo (interfaces, types, `ReactNode`, etc.) debe usar `import type { X } from '...'`, nunca `import { X }` a secas.
 
 ## Convención de nombres de tabla (Supabase)
-Toda tabla de este proyecto usa el prefijo **`t6_sta_maria_`**, ej. `t6_sta_maria_media_assets`.
+Toda tabla de este proyecto usa el prefijo **`torre_helice_`**, ej. `torre_helice_media_assets`.
 
 ## Estructura relevante del proyecto (real, confirmada por `find`)
 ```
 src/
-  assets/                          → archivos fuente originales (referencia, no se sirven directo en prod)
+  assets/                          → los videos de referencia (1 PORTADA, 2 NAVEGACION ORBITAL, 3 VTI PROYECTO) se ELIMINARON del repo;
+                                     la app siempre los toma de Supabase. Se conserva la lista como referencia de numeración:
     1 PORTADA/
       1 SANTAMARIA PORTADA TRANSICION.mp4
       2 SANTAMARIA PORTADA IDLE.mp4
@@ -67,14 +79,9 @@ src/
     4 FOTOGALERIA/                  → FOTO 01..08.jpg (galería general del proyecto)
   components/
     MenuPrincipal/MenuPrincipal.tsx + .css
-    SessionPanel/SessionPanel.tsx + .css      → solo visible en /inicio (actualmente comentado en App.tsx)
-    admin/
-      RequireAdmin.tsx + .css   → guard de la ruta oculta del panel admin (ver sección Panel admin)
     ui/
       BackButton/BackButton.tsx + .css
       Button/Button.tsx
-      LoginForm/LoginForm.tsx + .css          → input de "usuario" sin @dominio visible (ver Login)
-      AdminAccessButton/AdminAccessButton.tsx + .css   → ícono discreto, solo visible en /inicio, abre /t6-panel en pestaña nueva
       MenuLateralRotacion/MenuLateralRotacion.tsx + .css   → 5 botones circulares (pos1-4 + cenital), conectado a media + store
     VideoHandlerComponent.tsx + .css           → doble <video> con crossfade, maneja idle/transición/reversa
     VTI.tsx + .css                             → recorrido virtual de espacios (videos + labels + menú lateral)
@@ -86,9 +93,6 @@ src/
     MasterPlan/MasterPlan.tsx + .css           → monta BackButton + MenuLateralRotacion
     Disponibilidad/Disponibilidad.tsx          → placeholder, sin media aún
     Contacto/Contacto.tsx                      → placeholder, sin media aún
-    AdminPanel/AdminPanel.tsx + .css           → vista del panel admin (ver sección Panel admin)
-      MediaAssetRow.tsx + .css
-      MediaGroupItemRow.tsx + .css
   config/
     views.ts        → VIEWS, ViewId, VideoState (con campo `to`), EMPTY_VIDEO, VIEW_PATHS
     media.ts         → shape MEDIA (mutable), MEDIA_GROUPS, loadMedia(), getMedia(), getMediaGroup()
@@ -96,11 +100,10 @@ src/
     trackIds.tsx     → ids de tracking/analytics
   store/
     useAppStore.ts   → ui slice, navigation slice, video slice (currentVideo/changeVideo), blocked, videoReady
-    useAuthStore.ts  → auth (Supabase) — simplificado, ver sección Login
   lib/
     supabaseClient.ts
     analytics.ts
-  App.tsx / App.css   → ruta oculta /t6-panel aislada del chrome público (ver Panel admin)
+  App.tsx / App.css   → AppShell + rutas públicas (sin ruta admin ni auth)
   main.tsx           → bootstrap: loadMedia() antes de montar <App/>, loading screen simple mientras carga
   index.css
 public/
@@ -108,7 +111,7 @@ public/
   icons/             → icon_rotar.svg
   inicio.svg
   thumbnail.jpg      → ya NO se usa; og:image/twitter:image apuntan a Supabase Storage (ver sección OG)
-  fs.js              → fullscreen-on-click global; desactivado dentro de /t6-panel (ver sección Panel admin)
+  fs.js              → fullscreen-on-click global (actualmente comentado en index.html, no se carga)
 ```
 
 **Agregado en la migración de identidad:**
@@ -125,11 +128,11 @@ src/
                            xperience, dashboard, ubicacion
   lib/loadMaps3d.ts
   types/maps3d.d.ts
-public/qr/qr__xpropt6stamaria.png
+public/qr/qr__xpropthelice.png
 public/icons/icon_360.svg
 ```
 
-## Vistas del proyecto (7 públicas + 1 admin)
+## Vistas del proyecto (7 públicas)
 ```ts
 export const VIEWS = {
   BIENVENIDA:      'bienvenida',
@@ -143,7 +146,7 @@ export const VIEWS = {
 ```
 Rutas: `/bienvenida`, `/inicio`, `/informacion`, `/ubicacion`, `/masterplan`, `/disponibilidad`, `/contacto`.
 
-Ruta admin (oculta, fuera de `VIEWS`): `/t6-panel` — ver sección Panel admin.
+Ya no existe ruta admin (`/th-panel` eliminada; heredada como `/t6-panel`); la administración vive en el dashboard central.
 
 ## Arquitectura de media: indirection layer (Supabase)
 
@@ -151,29 +154,29 @@ Ruta admin (oculta, fuera de `VIEWS`): `/t6-panel` — ver sección Panel admin.
 
 ### Tablas Supabase
 ```sql
-create table public.t6_sta_maria_media_assets (
+create table public.torre_helice_media_assets (
   key text not null,
   storage_path text null,
-  bucket text null default 't6_media'::text,
+  bucket text null default 'torre_helice_media'::text,
   content_type text null,
   updated_at timestamp with time zone null default now(),
-  constraint t6_sta_maria_media_assets_pkey primary key (key)
+  constraint torre_helice_media_assets_pkey primary key (key)
 );
 
-create table public.t6_sta_maria_media_groups (
+create table public.torre_helice_media_groups (
   id uuid not null default gen_random_uuid(),
   group_key text not null,
   sort_order integer not null,
   storage_path text not null,
   label text null,
-  bucket text null default 't6_media'::text,
+  bucket text null default 'torre_helice_media'::text,
   content_type text null,
   updated_at timestamp with time zone null default now(),
-  constraint t6_sta_maria_media_groups_pkey primary key (id),
-  constraint t6_sta_maria_media_groups_group_key_sort_order_key unique (group_key, sort_order)
+  constraint torre_helice_media_groups_pkey primary key (id),
+  constraint torre_helice_media_groups_group_key_sort_order_key unique (group_key, sort_order)
 );
 
-create table public.t6_sta_maria_admins (
+create table public.torre_helice_admins (
   user_id uuid primary key references auth.users(id) on delete cascade,
   created_at timestamptz default now()
 );
@@ -211,42 +214,23 @@ fotos.proyecto    -- 8 fotos (FOTO 01..08, en ese orden por sort_order 0..7), si
 - `main.tsx`: hace `await loadMedia()` (con pantalla de loading simple) **antes** de montar `<App />`, garantizando que cualquier componente que lea `MEDIA.video.x.y` de forma síncrona ya tenga el valor resuelto.
 - Componentes de vista (`Bienvenida.tsx`, `MasterPlan.tsx`, etc.) importan `{ MEDIA }` y llaman `changeVideo(MEDIA.video.x.y, ...)` — no acceden a Supabase directamente.
 
-## Login (simplificado — construido)
+## Administración de medios (dashboard central — `xp-props-admin`)
 
-- **Un solo propósito**: el login existe únicamente para entrar al panel admin. El resto del sitio es público, sin cuentas de cliente ni roles.
-- **Cuentas**: se crean manualmente desde el dashboard de Supabase (Authentication > Users). No hay signup.
-- **Sin tabla de perfiles**: se eliminó la dependencia de `solea_profiles` (tabla de otro proyecto que no existe aquí). `useAuthStore.ts` quedó reducido a `session` + `isAuthenticated`, sin `profile`/`fetchProfile`.
-- **`LoginForm.tsx`**: el usuario solo teclea un nombre corto (ej. `t6`), nunca ve ni escribe el dominio. Internamente arma `${username}@example.local` antes de llamar a `login()`. Input es `type="text"` (no `email`, para no disparar validación de formato ni autocompletado con `@`).
-- **Multi-tenant en el mismo proyecto Supabase**: existen otras cuentas (`acuerdo@example.local`, etc.) para otros proyectos de negocio en la misma instancia Supabase. Estar autenticado NO basta para entrar al panel — se requiere estar además en `t6_sta_maria_admins` (ver Panel admin).
-- `SessionPanel.tsx` (actualmente comentado en `App.tsx`) fue ajustado para leer `session.user.email` en vez del `profile.display_name` eliminado.
-
-## Panel admin (construido)
-
-- **Ruta oculta**: `/t6-panel` (constante `ADMIN_PATH` en `App.tsx`). Elegida por convención con el prefijo `t6_` ya usado en las tablas; evita literal "admin" en la URL.
-- **Acceso desde la UI**: `AdminAccessButton` — ícono de engrane discreto (`opacity: 0.55`, sube a `1` en hover), fixed top-right, **visible solo en `/inicio`**. Al click, `window.open('/t6-panel', '_blank', 'noopener,noreferrer')` — abre en pestaña nueva, no navega la pestaña actual.
-- **Aislamiento en `App.tsx`**: cuando `location.pathname === '/t6-panel'`, `AppShell` renderiza únicamente `<RequireAdmin><AdminPanel /></RequireAdmin>` dentro de sus propias `<Routes>` — sin `VideoHandlerComponent`, `RotateNotice`, `MenuPrincipal` ni `HomeButton` del sitio público.
-- **`RequireAdmin.tsx`** (`src/components/admin/`): guard de dos capas —
-  1. Si `!isAuthenticated` → muestra `<LoginForm />`.
-  2. Si autenticado, hace `select` a `t6_sta_maria_admins` filtrando por `user_id = session.user.id` (vía `maybeSingle()`). Si no hay fila → "Esta cuenta no tiene acceso al panel." Si hay fila → renderiza `children` (`<AdminPanel />`).
-  - Esto bloquea en la UI a cuentas autenticadas de otros proyectos (ej. `acuerdo@example.local`) aunque compartan la misma instancia Supabase.
-- **`AdminPanel.tsx`**: dos tabs —
-  - **Slots únicos** (`media_assets`): una `MediaAssetRow` por key, con preview antes de subir y botón "Reemplazar".
-  - **Grupos** (`media_groups`): agrupados por `group_key`, cada item (`MediaGroupItemRow`) permite reemplazar el archivo y editar su `label`.
-  - Header con botón "Cerrar sesión" (llama a `logout()` del store).
-- **Flujo de reemplazo** (mismo patrón en `MediaAssetRow` y `MediaGroupItemRow`):
-  1. Selección de archivo → preview local (`URL.createObjectURL`, revocado al cambiar/limpiar).
-  2. Upload a Storage con path nuevo: `${carpeta-original}/${Date.now()}-${nombreArchivo}` (nunca sobrescribe el path anterior directamente).
-  3. `update` en la tabla correspondiente (`storage_path`, `content_type`, `updated_at`, y `label` en el caso de grupos).
-  4. **Solo si el `update` fue exitoso**: se borra el archivo anterior del bucket (`storage.remove([oldPath])`) — sin versionado, "último gana", evita acumular huérfanos en Storage (decisión explícita: es el patrón estándar de industria para este caso de uso, ver discusión en historial).
-- **RLS (Supabase)** — políticas agregadas (no se tocaron policies preexistentes de otros buckets/proyectos, ej. `acuerdo_documents_*`):
-  - `t6_sta_maria_admins`: RLS on, única policy `select` donde `user_id = auth.uid()` (un usuario solo puede confirmar si él mismo es admin, no ve la lista completa).
-  - `t6_sta_maria_media_assets` / `t6_sta_maria_media_groups`: `insert`/`update` para `authenticated` con `exists (select 1 from t6_sta_maria_admins where user_id = auth.uid())`. Lectura pública (`anon, authenticated`) ya existía.
-  - `storage.objects`, bucket `t6_media`: mismo criterio para `insert`/`update`/`delete`. El bucket es **público** (badge "Public" confirmado en el dashboard), por lo que la lectura no pasa por RLS de Postgres — se sirve directo vía `/storage/v1/object/public/...`.
-  - Admin dado de alta: `t6@example.local`, `user_id = 0c22acc6-e1b3-4ede-995c-6684d33b9dd8`.
-- **`fs.js`** (`public/fs.js`, fullscreen-on-click global del sitio): se agregó un guard al inicio — `if (window.location.pathname.startsWith("/t6-panel")) return;` — para que el panel admin no dispare fullscreen en cada click (comportamiento indeseado en un panel de administración).
+- **El sitio público ya NO tiene login ni panel admin.** Se eliminaron `/th-panel`, `ADMIN_PATH`, `AdminPanel` (y sus componentes), `RequireAdmin`, `LoginForm`, `AdminAccessButton`, `SessionPanel` y `useAuthStore`. El sitio es 100% público; Supabase solo se usa para leer media y guardar cotizaciones.
+- **Dashboard**: `https://admin.xperience.properties` (repo `xperiencegroup/xp-properties-admin`, carpeta local `xp-props-admin`). Login con usuario corto, el dominio `@xperience.group` se agrega solo.
+- **Registro de proyectos**: tabla `xp_properties_master` (una fila por proyecto con `assets_table`, `groups_table`, `admins_table`, `bucket`, `sort_order`, `activo`). Este proyecto es la fila `id = 'thelice'`. RLS: solo `select` para `authenticated`; se edita únicamente desde el dashboard de Supabase.
+- **Quién administra**: el dashboard solo muestra los proyectos donde el usuario está en su tabla de admins. Admins actuales de `torre_helice_admins`: `alejandro@`, `cobos@`, `rubio33@xperience.group`. Los usuarios que reemplazarán el contenido solo necesitan una cuenta en Authentication y una fila en esa tabla.
+- **Panel por carpetas**: agrupa por la primera carpeta del `storage_path` (portada, navorbital, vtiproyecto, fotorenders). Arrastrar un archivo sobre una carpeta busca su destino por nombre igual (avisa sobrescritura) o por número de archivo (`3`, `4R`, `FOTO 1`…); soltarlo sobre una tarjeta reemplaza ese archivo exacto. Siempre pide confirmación y bloquea imagen↔video.
+- **Flujo de reemplazo** (sin cambios de fondo): upload a `${carpeta}/${Date.now()}-${nombre}` → `update` de la tabla → borrado del archivo anterior solo si el `update` tuvo éxito ("último gana"). Si el `update` falla, se borra el recién subido.
+- **RLS (Supabase)** — sin cambios, el dashboard las usa tal cual:
+  - `torre_helice_admins`: RLS on, `select` donde `user_id = auth.uid()`.
+  - `torre_helice_media_assets` / `_groups`: lectura pública; `insert`/`update` solo admins.
+  - `storage.objects`, bucket `torre_helice_media` (público): `insert`/`update`/`delete` solo admins.
+- **Separación de Santa María (2026-10-09)**: tablas `torre_helice_*` creadas con `create table ... (like t6_sta_maria_* including all)`; media copiada con el mismo `storage_path` y `bucket = 'torre_helice_media'` (16 assets + 16 items de grupos). Al bucket se copiaron solo los 33 archivos en uso (sin huérfanos). `torre_helice_cotizaciones` arrancó vacía a propósito (los datos de Santa María son de sus clientes). Políticas RLS equivalentes a las de Santa María, ligadas a `torre_helice_admins`.
+- **Contenido actual**: los videos/fotos en Supabase siguen siendo los de Santa María como relleno, hasta que los usuarios los reemplacen desde el dashboard.
 
 ## OG / Open Graph
-- `index.html`: `og:image` y `twitter:image` apuntan a `https://bzcajnppqwgrybghwool.supabase.co/storage/v1/object/public/t6_media/thumbnail.jpg` (ya no al `thumbnail.jpg` de `public/`, que quedó sin uso).
+- `index.html`: `og:image` y `twitter:image` apuntan a `https://bzcajnppqwgrybghwool.supabase.co/storage/v1/object/public/torre_helice_media/thumbnail.jpg` (ya no al `thumbnail.jpg` de `public/`, que quedó sin uso).
 - Pendiente de verificar de cara al usuario: forzar refresco de caché de crawlers (Facebook Sharing Debugger, etc.) si el link ya se compartió antes con la imagen vieja.
 
 ## Store (`useAppStore.ts`)
@@ -268,20 +252,6 @@ overlay / openOverlay(o) / closeOverlay()
 chatOpen / chatMessages: ChatEntry[] / toggleChat(force?) / askChat(view)
 ```
 `VideoState` (`config/views.ts`) incluye `to?: string` — el destino lógico (ej. `'masterplan-pos2'`) que `VideoHandlerComponent` usa para resolver el idle correcto cuando termina una transición o reversa.
-
-## Store (`useAuthStore.ts`, simplificado)
-```ts
-type AuthState = {
-  session: Session | null
-  isAuthenticated: boolean
-  loading: boolean
-  error: string | null
-  login: (email: string, password: string) => Promise<boolean>
-  logout: () => Promise<void>
-  initAuthListener: () => void
-}
-```
-Sin `profile`, sin `fetchProfile`, sin dependencia de `solea_profiles`/`solea_auth_events` (tablas de otro proyecto que no existen aquí).
 
 ## VideoHandlerComponent
 - Doble `<video>` (crossfade sin corte), muted, playsInline.
@@ -321,18 +291,18 @@ Sin `profile`, sin `fetchProfile`, sin dependencia de `solea_profiles`/`solea_au
 - `MasterPlan.tsx` no renderiza su propio `BackButton` mientras exista `?panel=` (cada panel trae el suyo; antes se encimaban y el de MasterPlan mandaba a `/inicio`).
 
 ## Chrome global (`AppShell`, todo excepto `bienvenida`)
-- **`Topbar`**: marca/nombre/tipo desde `PROJECT` + botones **PRECIOS** (→ Paquetes), **COTIZA YA** (→ Cotizar), ícono **Dashboard** (→ Dashboard demo). Engrane admin comentado (el panel sigue en `/t6-panel`). PRECIOS oculto en mobile landscape.
+- **`Topbar`**: marca/nombre/tipo desde `PROJECT` + botones **PRECIOS** (→ Paquetes), **COTIZA YA** (→ Cotizar), ícono **Dashboard** (→ Dashboard demo). Engrane admin comentado (la administración vive en `admin.xperience.properties`). PRECIOS oculto en mobile landscape.
 - **`MenuPrincipal`**: toda vista con entrada en `PREMIUM_SECTIONS` abre primero el `PremiumModal` (hoy las 5). Si ya estás en esa vista, el click no hace nada.
 - **`BadgeXperience`** y **`Widgets`** (QR "Tu unidad"): solo en `/inicio`. Badge oculto en mobile landscape.
 - **`ChatButton`** (XP) + **`ChatPanel`**: en todas las vistas, `z-index` 9000/8999 (encima de todo excepto `RotateNotice`). Se ocultan con el overlay Xperience abierto.
 - **`Overlays`** (`components/Overlays/`): orquesta todos los modales según `store.overlay`, incluidas las rutas de regreso al cerrar.
-- `HomeButton` y `AdminAccessButton`: desmontados (comentados en `App.tsx`).
+- `HomeButton`: desmontado (sin uso en `App.tsx`).
 
 ## Overlays (todos full screen, `z-index: 100`, cierran con `CloseButton` ✕ arriba a la derecha)
 - **PremiumModal** (`config/premiumSections.ts`): galería estática (1 imagen de `src/assets/premium/`), eyebrow/título/párrafos, CTA **Ver precios y paquetes** (→ Paquetes; al cerrarlo regresa a este modal), **Pregúntale a Chat XP** (abre el chat con la pregunta de la sección, el modal NO se cierra) y **Desbloquear** (cierra, colapsa el menú y navega). `desbloqueable: true` solo en Ubicación y Master Plan; en el resto el botón no se muestra.
-- **Paquetes** (`config/paquetes.ts`): 4 tarjetas, B destacada; precios placeholder. **Cotizar este** → Cotizar con `paquete`; al cerrar regresa a Paquetes.
-- **Cotizar** (`config/cotizar.ts`): 5 preguntas (la 05 de contacto se agregó al diseño) + `CalendarioCita` real (mes actual navegable, sin fines de semana ni días pasados) + horas. Guarda en `t6_sta_maria_cotizaciones`.
-- **QR** (`config/qr.ts`): hoja 16:9 con `public/qr/qr__xpropt6stamaria.png`. **Imprimir hoja** imprime solo la imagen del QR centrada (8 cm). Subir unidad → Cotizar; Compartir → Compartir (ambos regresan al QR).
+- **Paquetes** (`config/paquetes.ts`, diseño de `xperience-properties-propuesta-visual-v2_1.html`): tabla comparativa de 3 paquetes (A Activación $38,000 · B Comercial + Disponibilidades $72,500, destacado · C Full Xperience $117,000) con "DESDE" y modalidad de pago; 4 grupos de filas (✓ / ✕ / texto / mensualidad). Abajo: caja de levantamiento del Paquete C, caja "La pauta va por separado" y nota legal. **Cotizar este** → Cotizar con `paquete` (`'PAQUETE A' | 'B' | 'C'`); al cerrar regresa a Paquetes.
+- **Cotizar** (`config/cotizar.ts`): 5 preguntas (la 05 de contacto se agregó al diseño) + `CalendarioCita` real (mes actual navegable, sin fines de semana ni días pasados) + horas. Guarda en `torre_helice_cotizaciones`.
+- **QR** (`config/qr.ts`): hoja 16:9 con `public/qr/qr__xpropthelice.png`. **Imprimir hoja** imprime solo la imagen del QR centrada (8 cm). Subir unidad → Cotizar; Compartir → Compartir (ambos regresan al QR).
 - **Compartir** (`config/compartir.ts`): dummy, solo muestra confirmación.
 - **Xperience** (`config/xperience.ts`): 4 slides; solo se monta el iframe de YouTube del slide activo (se detiene al cambiar).
 - **Dashboard** (`config/dashboard.ts`): dummy; login simulado, KPIs, tablas y barras estáticas; botones CAMBIAR / VER INTELLIGENCE sin acción (igual que el HTML).
@@ -360,9 +330,9 @@ Sin `profile`, sin `fetchProfile`, sin dependencia de `solea_profiles`/`solea_au
 
 ## Supabase: tabla nueva
 ```sql
-t6_sta_maria_cotizaciones (id, created_at, rol, m2, busca text[], estrategia, paquete,
+torre_helice_cotizaciones (id, created_at, rol, m2, busca text[], estrategia, paquete,
   nombre, correo, telefono, fecha date, hora)
--- RLS: insert para anon/authenticated; select solo admins (t6_sta_maria_admins)
+-- RLS: insert para anon/authenticated; select solo admins (torre_helice_admins)
 ```
 
 ## Analítica (`config/trackIds.tsx`)
@@ -371,14 +341,16 @@ t6_sta_maria_cotizaciones (id, created_at, rol, m2, busca text[], estrategia, pa
 - `inicio.menu.masterPlan` conserva el string histórico `...:menu:rotacion:click`.
 
 ## Dummys vs. reales
-- **Reales**: identidad visual, overlays y su navegación, Cotizar (Supabase), Ubicación 3D, visor 360, imprimir QR, colapso de menús, analítica.
-- **Dummys**: Chat XP, Compartir, Dashboard, precios de Paquetes, galería del PremiumModal, portafolio Xperience, chips "Sobre este proyecto"/"Agendar reunión".
+- **Reales**: identidad visual, overlays y su navegación, Cotizar (Supabase), Ubicación 3D, visor 360, imprimir QR, colapso de menús, precios y tabla de Paquetes, analítica.
+- **Dummys**: Chat XP, Compartir, Dashboard, galería del PremiumModal, portafolio Xperience, chips "Sobre este proyecto"/"Agendar reunión".
 
 ## Pendiente
 - Vistas sin contenido: `Informacion`, `Disponibilidad`, `Contacto` (sin botón Desbloquear hasta que existan).
 - Protección real de rutas por URL directa.
-- Migrar panel admin (`LoginForm`, `RequireAdmin`, `AdminPanel` y rows) a la identidad nueva.
-- Limpieza: eliminar `HomeButton`/`AdminAccessButton` y las variables legacy de `index.css`.
+- Limpieza: eliminar `HomeButton` y las variables legacy de `index.css`.
+- Reemplazar el contenido de relleno de Santa María (desde el dashboard): videos, fotos y `thumbnail.jpg` del bucket.
+- Contenido que NO pasa por el dashboard (cambio en código): ubicación del mapa (`config/ubicacion.ts`, hoy con coordenadas de Santa María), `public/rotacion/*.jpg`, `src/assets/premium/`, `src/assets/360/360_image.jpg`, `src/assets/compartir/compartir.jpg`.
+- Textos propios del proyecto en `config/` (premiumSections, paquetes, chatXP, etc.) aún heredados de Santa María.
 - Verificar refresco de caché de OG en crawlers.
 
 ## Troubleshooting ya resuelto
@@ -397,3 +369,4 @@ t6_sta_maria_cotizaciones (id, created_at, rol, m2, busca text[], estrategia, pa
 - **BackButton de MasterPlan encima del de los paneles**: ambos en la misma posición; se oculta el de MasterPlan con `?panel=`.
 - **Viewer360 "Uncaught Error: shader" en DEV**: StrictMode remonta el efecto y `loseContext()` en la limpieza dejaba el canvas con contexto perdido. No llamar `loseContext()`; guardar con `gl.isContextLost()`.
 - **`useAppStore` + `get`**: usar `set((s) => ...)` en vez de `get()` si no se declaró en la firma de `create`.
+- **Padding final ignorado en modales con scroll**: con `display: flex` + `overflow-y: auto` en el contenedor, el hijo se encoge al alto de la pantalla y su `padding-bottom` no queda al final del contenido. Usar `display: block` en el contenedor de scroll (o un `::after` espaciador). Además, los modales largos reservan `58px + 1.75rem` abajo para no quedar bajo el ChatButton.
